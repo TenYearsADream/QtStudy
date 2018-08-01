@@ -19,55 +19,35 @@ Rectangle{
         centerText.color = clr;
     }
     
-    GridLayout {
+    RowLayout {
         anchors.left: parent.left;
         anchors.leftMargin: 4;
         anchors.bottom: parent.bottom;
         anchors.bottomMargin: 4;
-        width: 300;
-        rows: 3;
-        columns: 3;
-        rowSpacing: 4;
-        columnSpacing: 4;
-        flow: GridLayout.TopToBottom;
+        anchors.right: parent.right;
+        anchors.rightMargin: 4;
+        spacing: 4;
 
         ColorPicker {
             color: Qt.rgba(Math.random(),
                            Math.random(),Math.random(),1.0);
             onColorPicked: setTextColor(clr);
-            Layout.columnSpan: 3;
-            Layout.rowSpan: 3;
+        }
+        ColorPicker {
+            color: Qt.rgba(Math.random(),
+                           Math.random(),Math.random(),1.0);
+            onColorPicked: setTextColor(clr);
+        }
+        ColorPicker {
+            color: Qt.rgba(Math.random(),
+                           Math.random(),Math.random(),1.0);
+            onColorPicked: setTextColor(clr);
         }
         ColorPicker {
             color: Qt.rgba(Math.random(),
                            Math.random(),Math.random(),1.0);
             onColorPicked: setTextColor(clr);
             Layout.fillWidth: true;
-        }
-        ColorPicker {
-            color: Qt.rgba(Math.random(),
-                           Math.random(),Math.random(),1.0);
-            onColorPicked: setTextColor(clr);
-        }
-        ColorPicker {
-            color: Qt.rgba(Math.random(),
-                           Math.random(),Math.random(),1.0);
-            onColorPicked: setTextColor(clr);
-        }
-        ColorPicker {
-            color: Qt.rgba(Math.random(),
-                           Math.random(),Math.random(),1.0);
-            onColorPicked: setTextColor(clr);
-        }
-        ColorPicker {
-            color: Qt.rgba(Math.random(),
-                           Math.random(),Math.random(),1.0);
-            onColorPicked: setTextColor(clr);
-        }
-        ColorPicker {
-            color: Qt.rgba(Math.random(),
-                           Math.random(),Math.random(),1.0);
-            onColorPicked: setTextColor(clr);
         }
     }
 }
