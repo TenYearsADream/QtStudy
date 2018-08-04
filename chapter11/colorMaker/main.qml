@@ -6,4 +6,9 @@ Window {
     width: 640
     height: 480
     title: qsTr("Hello World")
+    Component.onCompleted: {
+        colorMaker.color = Qt.rgba(0, 180, 120, 255);
+        colorMaker.setAlgorithm(ColorMaker.LinearIncrease);
+        changeAlgorithm(colorAlgorithm, colorMaker.algorithm());
+    }
 }
