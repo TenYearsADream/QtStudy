@@ -13,19 +13,14 @@ Rectangle {
         anchors.centerIn: parent;
         color: "blue";
 
-        PropertyAnimation {
-            id: animation;
-            target: rect;
-//            property: "width";
-            properties: "width,height";
-            to: 220;
-            duration: 1000;
-        }
-
         MouseArea {
             anchors.fill: parent;
-            onClicked: animation.start();
-//            onClicked: animation.running = true;
+            onClicked: PropertyAnimation {
+                target: rect;
+                properties: "width";
+                to: 150;
+                duration: 1000;
+            }
         }
     }
 }
