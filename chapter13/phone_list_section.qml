@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.1
 
 Rectangle{
     width: 360;
-    height: 300;
+    height: 400;
     color: "#EEEEEE";
     
     Component {
@@ -88,6 +88,8 @@ Rectangle{
             property alias text: txt.text;
             signal clean();
             signal add();
+            signal insert();
+            signal moveDown();
 
             Text {
                 anchors.left: parent.left;
@@ -115,6 +117,24 @@ Rectangle{
                 text: "Add";
                 onClicked: footerRootItem.add();
             }
+
+            Button{
+                id: insertOne;
+                anchors.right: addOne.left;
+                anchors.rightMargin: 4;
+                anchors.verticalCenter: parent.verticalCenter;
+                text: "Insert";
+                onClicked: footerRootItem.insert();
+            }
+
+            Button{
+                id: moveDown;
+                anchors.right: insertOne.left;
+                anchors.rightMargin: 4;
+                anchors.verticalCenter: parent.verticalCenter;
+                text: "Down";
+                onClicked: footerRootItem.moveDown();
+            }
         }
     }
     Component {
@@ -123,6 +143,9 @@ Rectangle{
             id: wrapper;
             width: parent.width;
             height: 30;
+            ListView.onAdd:{
+                console.log("count: ",ListView.view.count);
+            }
 
             MouseArea {
                 anchors.fill: parent;
@@ -166,9 +189,24 @@ Rectangle{
         }
     }
 
+    Component{
+        id: sectionHeader;
+        Rectangle{
+            width: parent.width;
+            height: childrenRect.height;
+            color: "lightsteelblue";
+            Text{
+                text: section;
+                font.bold: true;
+                font.pixelSize: 20;
+            }
+        }
+    }
+
     ListView {
         id: listView;
         anchors.fill: parent;
+        interactive: false;
         delegate: phoneDelegate;
         model: phoneModel.createObject(listView);
         header: headerView;
@@ -176,6 +214,61 @@ Rectangle{
         focus: true;
         highlight: Rectangle {
             color: "lightblue";
+        }
+
+        add: Transition{
+            ParallelAnimation{
+                NumberAnimation{
+                    property: "opacity";
+                    from: 0;
+                    to: 1.0;
+                    duration: 1000;
+                }
+                NumberAnimation{
+                    property: "y";
+                    from: 0;
+                    duration: 1000;
+                }
+            }
+        }
+
+        displaced: Transition {
+            SpringAnimation{
+                property: "y";
+                spring: 3;
+                damping: 0.1;
+                epsilon: 0.25;
+            }
+        }
+
+        remove: Transition {
+            NumberAnimation{
+                properties: "y";
+                to: 0;
+                duration: 600;
+            }
+            NumberAnimation{
+                property: "opacity";
+                to: 0;
+                duration: 400;
+            }
+        }
+
+        move: Transition{
+            NumberAnimation{
+                property: "y";
+                duration: 700;
+                easing.type: Easing.InOutQuart;
+            }
+        }
+
+        populate: Transition{
+            NumberAnimation{
+                property: "opacity";
+                from: 0;
+                to: 1.0;
+                duration: 1000;
+            }
         }
 
         onCurrentIndexChanged: {
@@ -198,9 +291,30 @@ Rectangle{
                         );
         }
 
+        function insertOne(){
+            model.insert(Math.round(Math.random() * model.count),
+                         {
+                             "name":"HTC One E8",
+                             "cost":"2999",
+                             "manufacturer":"HTC"
+                         }
+                         );
+        }
+
+        function moveDown(){
+            if(currentIndex + 1 < model.count){
+                model.move(currentIndex, currentIndex + 1, 1);
+            }
+        }
+        section.property: "manufacturer";
+        section.criteria: ViewSection.FullString;
+        section.delegate: sectionHeader;
+
         Component.onCompleted: {
             listView.footerItem.clean.connect(listView.model.clear);
             listView.footerItem.add.connect(listView.addOne);
+            listView.footerItem.insert.connect(listView.insertOne);
+            listView.footerItem.moveDown.connect(listView.moveDown);
         }
     }
 }
